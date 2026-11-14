@@ -1,0 +1,23 @@
+# Loại trừ khỏi ngữ cảnh build Docker để image nhỏ và build nhanh.
+.git
+.gitignore
+node_modules
+dist
+coverage
+
+# Kết quả build .NET
+**/bin
+**/obj
+
+# Tài liệu và ảnh phục vụ dev
+docs
+*.md
+!AGENTS.md
+
+# Kết quả build sẵn có trong bản phát triển — Docker tự build lại
+src/vite-env.d.ts
+
+# File môi trường cục bộ, không bake vào ảnh
+.env
+.env.local
+.env.*.local

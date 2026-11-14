@@ -1,0 +1,85 @@
+@startuml 03-Activity-WorkflowComplete
+!pragma layout smetana
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam LeftToRightDisplayDirection right
+skinparam activity {
+  BackgroundColor #F1F5F9
+  BorderColor #475569
+  FontSize 9
+  Margin 8
+  DiamondBackgroundColor #FEF3C7
+  DiamondBorderColor #D97706
+}
+skinparam note {
+  BackgroundColor #DBEAFE
+  BorderColor #2563EB
+  FontColor #1E3A8A
+  FontSize 9
+}
+
+title
+  <B>WORKFLOW HOÀN CHỈNH: BÁO HỎNG → NGHIỆM THU</B>
+end title
+
+start
+
+split
+
+  partition "Khoa" {
+    :Báo hỏng TB\nmô tả + ảnh\nchọn SƠ BỘ/KHẨN;\nGửi BC;
+  }
+
+  split again
+
+  partition "Hệ thống" {
+    :Kiểm tra DL;\nSinh mã INC;\nLưu sự cố MỚI\n+ audit log;\nGửi TB cho DP;
+    if (DL hợp lệ?) then (Không)
+      :Trả lỗi (400/404);
+      stop
+    endif
+  }
+
+  split again
+
+  partition "DP" {
+    :Tiếp nhận sự cố;\nXem hàng đợi KHẨN;\nĐiều tra;\nTạo phiếu SC (KHẨN)\n+ gửi TB lại Khoa\n+ giao KKT;
+  }
+
+  split again
+
+  partition "KKT" {
+    :Xem checklist;\nNhập GT ĐO\nBR-03: ĐẠT/KHÔNG;\nChụp ảnh/BL\nSHA-256 → CSDL;\nBấm "Hoàn thành"\nServer validate;
+    if (Thiếu?) then (Có)
+      :Từ chối + liệt kê;\nQuay lại KKT;
+    else (Đủ)
+      :Phiếu → CHỜ NG;\nTB → ĐANG SỬA (khóa);\nAudit log;
+    endif
+  }
+
+  split again
+
+  partition "DP Nghiệm thu" {
+    :Đối chiếu checklist + BL;
+    if (Có KHÔNG ĐẠT?) then (Có)
+      :Từ chối;\nTB không mở khóa;\nKKT sửa lại;
+    else (Duyệt?)
+      if (Duyệt) then
+        :Phiếu → HOÀN THÀNH;\nTB → HOẠT ĐỘNG;\nHC mới → lịch PM;
+      else (Trả lại)
+        :Nhập lý do;\nPhiếu → TRẢ LẠI;\nTB vẫn khóa;
+      endif
+    endif
+  }
+
+  split end
+
+note right
+  <color:#DC2626>BR-03</color>: ĐẠT = trong dung sai
+  <color:#DC2626>BR-01</color>: TB hết HC → khóa (CSDL+Service)
+  <color:#DC2626>BR-02</color>: Mở khóa TB chỉ khi NG = ĐẠT
+end note
+
+stop
+
+@enduml

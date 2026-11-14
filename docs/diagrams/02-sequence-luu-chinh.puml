@@ -1,0 +1,48 @@
+@startuml 02-Sequence-LuuChinh
+!pragma layout smetana
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam sequence {
+  ArrowColor #334155
+  LifeLineBorderColor #64748B
+  LifeLineBackgroundColor #F8FAFC
+  ParticipantBorderColor #334155
+  ParticipantBackgroundColor #DBEAFE
+  ParticipantFontColor #1E3A8A
+  ActorBorderColor #334155
+  ActorBackgroundColor #FDE68A
+  ActorFontColor #78350F
+  BoxFontSize 11
+  NoteFontSize 11
+}
+
+title
+  <b>SƠ ĐỒ SEQUENCE — LUỒNG CHÍNH: BÁO HỎNG → SỬA CHỮA</b>
+end title
+
+actor "Đầu mối khoa" as KHOA
+participant "Hệ thống" as SYS
+actor "Điều phối" as DP
+actor "Kỹ thuật viên" as KTV
+
+KHOA -> SYS : Báo hỏng thiết bị
+SYS -> SYS : Lưu sự cố, gửi thông báo
+SYS --> DP : Nhận thông báo
+DP -> SYS : Tạo phiếu sửa chữa
+SYS -> SYS : Phân công kỹ thuật viên
+SYS --> KTV : Nhận phiếu
+KTV -> SYS : Thực hiện phiếu, nộp bằng chứng
+SYS -> SYS : Kiểm tra điều kiện hoàn thành
+SYS --> DP : Chờ nghiệm thu
+DP -> SYS : Duyệt nghiệm thu
+SYS -> SYS : Mở khóa thiết bị
+SYS --> KHOA : Thông báo hoàn thành
+
+note right of SYS
+  <b>Kiểm tra:</b>
+  - Đủ bước checklist
+  - Đủ bằng chứng
+  - Giá trị đo trong dung sai
+end note
+
+@enduml

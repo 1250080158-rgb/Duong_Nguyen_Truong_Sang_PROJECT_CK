@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+backend/**/bin/
+backend/**/obj/
+*.log
+package-lock.json
+pnpm-lock.yaml
+*.png
+*.jpg
+*.pdf

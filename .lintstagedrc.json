@@ -1,0 +1,5 @@
+{
+  "*.{ts,tsx,js,jsx,mjs,cjs}": ["prettier --write"],
+  "*.{json,yml,yaml,css,html,md}": ["prettier --write"],
+  "*.{cs,csproj}": ["dotnet format backend/MedEquip.slnx whitespace --include"]
+}

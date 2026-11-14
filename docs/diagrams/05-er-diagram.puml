@@ -1,0 +1,158 @@
+@startuml 05-ERD-QLTBYT
+!pragma layout smetana
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam LeftToRightDisplayDirection right
+skinparam entity {
+  BackgroundColor #F8FAFC
+  BorderColor #475569
+  FontSize 10
+  AttributeFontColor #475569
+  AttributeFontSize 9
+}
+skinparam note {
+  BackgroundColor #DBEAFE
+  BorderColor #2563EB
+  FontColor #1E3A8A
+  FontSize 9
+}
+
+' Tên bảng/cột ở đây KHỚP database/QLTBYT.sql (PostgreSQL 18).
+' ERD vẽ 10 thực thể chính; CSDL đầy đủ có 16 bảng (thêm
+' required_evidence_config, evidence, assignments, audit_log,
+' system_config, notifications).
+title
+  <b>ERD — CƠ SỞ DỮ LIỆU QLTBYT</b>
+  10 thực thể chính (trong 16 bảng của QLTBYT.sql)
+end title
+
+entity "departments" as kp {
+  *department_id <<PK>>
+  *name
+  *is_clinical
+}
+
+entity "manufacturers" as hsx {
+  *manufacturer_id <<PK>>
+  *name
+}
+
+entity "suppliers" as ncc {
+  *supplier_id <<PK>>
+  *name
+}
+
+entity "equipment_models" as model {
+  *model_id <<PK>>
+  *name
+  *category
+  *pm_cycle_days
+  *hc_cycle_days
+  hc_tolerance_pct
+  *manufacturer_id <<FK>>
+}
+
+entity "equipment" as tb {
+  *equipment_id <<PK>>
+  *code
+  *serial
+  *status
+  calibration_expiry
+  next_pm
+  *import_date
+  *model_id <<FK>>
+  *department_id <<FK>>
+  maintenance_supplier_id <<FK>>
+}
+
+entity "equipment_status_history" as lsu {
+  *history_id <<PK>>
+  *equipment_id <<FK>>
+  *from_status
+  *to_status
+  *changed_at
+  changed_by
+  reason
+}
+
+entity "users" as nd {
+  *user_id <<PK>>
+  *username
+  *full_name
+  *role
+  department_id <<FK>>
+  *is_active
+  last_login
+}
+
+entity "work_orders" as ph {
+  *work_order_id <<PK>>
+  *code
+  *order_type
+  *status
+  *priority
+  *progress
+  *deadline
+  *created_at
+  *equipment_id <<FK>>
+  *department_id <<FK>>
+  assignee_id <<FK>>
+}
+
+entity "work_order_steps" as b {
+  *step_id <<PK>>
+  *work_order_id <<FK>>
+  *ordinal
+  *title
+  *require_photo
+  standard_value
+  measured_value
+  tolerance_pct
+  result
+  *done
+  performed_at
+  performed_by <<FK>>
+}
+
+entity "incidents" as sc {
+  *incident_id <<PK>>
+  *code
+  *severity
+  *status
+  photo_count
+  created_at
+  closed_at
+  *equipment_id <<FK>>
+  reported_by <<FK>>
+  work_order_id <<FK>>
+}
+
+kp ||--o{ tb : quản lý
+hsx ||--o{ model : sản xuất
+model ||--o{ tb : định nghĩa
+ncc }|--o{ tb : bảo trì
+tb ||--o{ lsu : theo dõi
+tb ||--o{ ph : có phiếu
+tb ||--o{ sc : báo cáo sự cố
+nd ||--o{ ph : thực hiện
+nd ||--o{ sc : báo cáo
+ph ||--o{ b : có bước
+ph ||--o|| sc : sinh ra từ
+
+note right of tb
+  TRẠNG THÁI TB:\nHOAT_DONG, SAP_HAN\nCHO_HIEU_CHUAN, DANG_SUA,\nTHANH_LY
+end note
+
+note right of ph
+  TRẠNG THÁI PHIẾU:\nCHO_PHAN_CONG, DANG_THUC_HIEN,\nCHO_NGHIEM_THU, HOAN_THANH,\nTRA_LAI
+end note
+
+note right of b
+  <color:#DC2626>BR-03</color>: result = 'DAT'\nCHỈ khi nằm trong dung sai\n— constraint SQL + C#
+end note
+
+note bottom of tb
+  SAP_HAN là trạng thái SUY BIẾN\n(tính khi hiển thị theo\nsystem_config.warning_days_early),\nkhông lưu trong cột status.
+end note
+
+@enduml

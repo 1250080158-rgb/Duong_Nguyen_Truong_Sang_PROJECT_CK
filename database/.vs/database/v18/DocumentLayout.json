@@ -1,0 +1,68 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\BAITAP\\CK Th\u1EE9 6\\database\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\BAITAP\\CK Th\u1EE9 6\\database\\QLTBYT_OLD.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:QLTBYT_OLD.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\BAITAP\\CK Th\u1EE9 6\\database\\QLTBYT.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:QLTBYT.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\BAITAP\\CK Th\u1EE9 6\\database\\02-create-keycloak-db.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:02-create-keycloak-db.sql||{B5A506EB-11BE-4782-9A18-21265C2CA0B4}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "QLTBYT_OLD.sql - localhost.master (SANG\\Sang (96))",
+              "DocumentMoniker": "E:\\BAITAP\\CK Th\u1EE9 6\\database\\QLTBYT_OLD.sql",
+              "RelativeDocumentMoniker": "QLTBYT_OLD.sql",
+              "ToolTip": "E:\\BAITAP\\CK Th\u1EE9 6\\database\\QLTBYT_OLD.sql - localhost.master (SANG\\Sang (96))",
+              "RelativeToolTip": "QLTBYT_OLD.sql - localhost.master (SANG\\Sang (96))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-10-27T13:30:00.719Z",
+              "EditorCaption": " - localhost.master (SANG\\Sang (96))"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "QLTBYT.sql - localhost.master (SANG\\Sang (95))",
+              "DocumentMoniker": "E:\\BAITAP\\CK Th\u1EE9 6\\database\\QLTBYT.sql",
+              "RelativeDocumentMoniker": "QLTBYT.sql",
+              "ToolTip": "E:\\BAITAP\\CK Th\u1EE9 6\\database\\QLTBYT.sql - localhost.master (SANG\\Sang (95))",
+              "RelativeToolTip": "QLTBYT.sql - localhost.master (SANG\\Sang (95))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-10-27T13:30:00.515Z",
+              "EditorCaption": " - localhost.master (SANG\\Sang (95))"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "02-create-keycloak-db.sql - localhost.master (SANG\\Sang (94))",
+              "DocumentMoniker": "E:\\BAITAP\\CK Th\u1EE9 6\\database\\02-create-keycloak-db.sql",
+              "RelativeDocumentMoniker": "02-create-keycloak-db.sql",
+              "ToolTip": "E:\\BAITAP\\CK Th\u1EE9 6\\database\\02-create-keycloak-db.sql - localhost.master (SANG\\Sang (94))",
+              "RelativeToolTip": "02-create-keycloak-db.sql - localhost.master (SANG\\Sang (94))",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000826|",
+              "WhenOpened": "2026-10-27T13:30:00.425Z",
+              "EditorCaption": " - localhost.master (SANG\\Sang (94))"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

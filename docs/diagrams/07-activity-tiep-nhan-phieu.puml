@@ -1,0 +1,25 @@
+@startuml
+start
+:Mo phieu duoc giao;
+:Xem chi tiet thiet bi va checklist;
+
+if (Co buoc do?) then (Co)
+  :Nhap gia tri do;
+else (Khong)
+  :Danh dau hoan thanh;
+endif
+
+:Nop bang chung (anh, PDF);
+
+:Bam nut Hoan thanh;
+
+if (Du buoc va bang chung?) then (Thieu)
+  :He thong tu choi;
+else (Du)
+  :Phieu chuyen CHO NGHIEM THU;
+  :Thiet bi chuyen DANG SUA;
+  :Ghi nhat ky kiem toan;
+endif
+
+stop
+@enduml

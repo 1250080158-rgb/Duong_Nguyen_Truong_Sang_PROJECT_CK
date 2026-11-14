@@ -1,0 +1,198 @@
+# =====================================================================
+# MED-EQUIP — chạy trọn hệ thống bằng Docker Compose.
+#
+#   docker compose up -d --build
+#
+# Sau đó mở:
+#   Giao diện : http://localhost:3000
+#   API       : http://localhost:8081/api
+#   Keycloak  : http://localhost:8080  (đăng nhập quản trị admin/admin)
+#   PostgreSQL: localhost:5432
+#
+# CSDL được nạp tự động từ database/QLTBYT.sql lần khởi tạo đầu tiên.
+# Muốn nạp lại từ đầu: docker compose down -v rồi up lại.
+# =====================================================================
+
+name: medequip
+
+services:
+  # -------------------------------------------------------------------
+  # CSDL PostgreSQL
+  # -------------------------------------------------------------------
+  postgres:
+    image: postgres:18-alpine
+    container_name: medequip-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: qltbyt
+      POSTGRES_USER: sa
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-123456}
+      # CSDL dùng tên tiếng Việt trong dữ liệu mẫu và câu báo cáo
+      POSTGRES_INITDB_ARGS: '--encoding=UTF8 --locale=C'
+      TZ: Asia/Ho_Chi_Minh
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      # PostgreSQL 18 đổi cách tổ chức thư mục dữ liệu: mount cả /var/lib/postgresql
+      # (không phải /var/lib/postgresql/data) để còn dùng được pg_upgrade --link.
+      # Mount đúng nhánh con sẽ khiến container báo "unused mount/volume" rồi dừng.
+      - postgres-data:/var/lib/postgresql
+      # Các script trong thư mục này chạy đúng một lần, lúc data volume
+      # còn trống. Đây là nơi nạp toàn bộ schema + dữ liệu mẫu.
+      - ./database/QLTBYT.sql:/docker-entrypoint-initdb.d/01-QLTBYT.sql:ro
+      # CSDL riêng cho Keycloak
+      - ./database/02-create-keycloak-db.sql:/docker-entrypoint-initdb.d/02-create-keycloak-db.sql:ro
+    healthcheck:
+      # Phải báo "accepting connections" thì mới khởi động API, tránh API
+      # chết vì chưa kịp có CSDL.
+      test: ['CMD-SHELL', 'pg_isready -U sa -d qltbyt']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  # -------------------------------------------------------------------
+  # Máy chủ xác thực Keycloak
+  # -------------------------------------------------------------------
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: medequip-keycloak
+    restart: unless-stopped
+    depends_on:
+      # CSDL phải sẵn sàng trước khi Keycloak tạo lược đồ của riêng nó.
+      postgres:
+        condition: service_healthy
+    command: >
+      start
+      --import-realm
+      --http-port=8080
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KEYCLOAK_ADMIN:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-123456}
+      # Lưu realm vào PostgreSQL thay vì H2 trong RAM của `start-dev`:
+      # `start-dev` sẽ mất sạch người dùng và client mỗi lần khởi động lại.
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: sa
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:-123456}
+      # Issuer phát ra trong token là tên công khai mà trình duyệt gọi
+      # được. API sẽ tải khoá công khai qua tên nội bộ "keycloak".
+      KC_HOSTNAME: http://localhost:${KEYCLOAK_PORT:-8080}
+      KC_HOSTNAME_STRICT: 'false'
+      # Địa chỉ backchannel phải bám theo Host của yêu cầu thay vì lấy cứng
+      # từ KC_HOSTNAME. Nếu không bật, jwks_uri trả về là
+      # http://localhost:8080/... và container API sẽ tự gọi chính nó
+      # (localhost trong container là chính container đó) nên báo
+      # "The signature key was not found".
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: 'true'
+      KC_HTTP_ENABLED: 'true'
+      KC_HEALTH_ENABLED: 'true'
+      # Ngôn ngữ mặc định của trang đăng nhập
+      KC_INTERNATIONALIZATION_ENABLED: 'true'
+      KC_DEFAULT_LOCALE: vi
+      TZ: Asia/Ho_Chi_Minh
+    ports:
+      - '${KEYCLOAK_PORT:-8080}:8080'
+    volumes:
+      # Nạp sẵn realm, client, vai trò và tài khoản mẫu
+      - ./docker/keycloak/realm-medequip.json:/opt/keycloak/data/import/realm-medequip.json:ro
+    healthcheck:
+      # Keycloak 26 phục vụ endpoint sức khoẻ trên CỔNG QUẢN LÝ 9000,
+      # không phải cổng HTTP 8080 (gọi 8080 sẽ ra 404).
+      # Ảng chính thức không có curl/wget, nên dùng bash + /dev/tcp.
+      test:
+        [
+          'CMD-SHELL',
+          "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q '\"status\": \"UP\"' <&3",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 60s
+
+  # -------------------------------------------------------------------
+  # API ASP.NET Core
+  # -------------------------------------------------------------------
+  api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: medequip-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      # Dùng tên service của Docker làm host CSDL
+      ConnectionStrings__MedEquip: >-
+        Host=postgres;Port=5432;Database=qltbyt;Username=sa;Password=${POSTGRES_PASSWORD:-123456}
+      # ---- Chế độ xác thực ----
+      # Dev  : API tự cấp JWT, /api/auth/login mở, không cần Keycloak.
+      # Oidc : xác thực bằng token Keycloak, /api/auth/login trả 404.
+      Auth__Mode: ${AUTH_MODE:-Oidc}
+      Auth__Oidc__Authority: http://keycloak:8080/realms/medequip
+      Auth__Oidc__PublicAuthority: http://localhost:${KEYCLOAK_PORT:-8080}/realms/medequip
+      Auth__Oidc__Audience: medequip-api
+      Auth__Oidc__RequireHttpsMetadata: 'false'
+      # Thông tin quản trị Keycloak — dùng cho chức năng "Đồng bộ Keycloak"
+      # (POST /api/users/sync-keycloak) đọc danh sách tài khoản và vai trò
+      # trong realm rồi đồng bộ về bảng users của CSDL.
+      Auth__Oidc__Realm: medequip
+      Auth__Oidc__AdminUsername: ${KEYCLOAK_ADMIN:-admin}
+      Auth__Oidc__AdminPassword: ${KEYCLOAK_ADMIN_PASSWORD:-123456}
+      TZ: Asia/Ho_Chi_Minh
+    ports:
+      - '${API_PORT:-8081}:8080'
+    volumes:
+      - uploads-data:/app/uploads
+    healthcheck:
+      # /health còn kiểm tra kết nối CSDL, nên container API chỉ khỏe
+      # khi PostgreSQL thật sự phục vụ được.
+      test: ['CMD-SHELL', 'curl -fsS http://127.0.0.1:8080/health || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
+  # -------------------------------------------------------------------
+  # Giao diện React (nginx)
+  # -------------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+      args:
+        # nginx chuyển tiếp /api sang container api, nên trình duyệt
+        # chỉ cần gọi cùng origin — không cần cấu hình CORS.
+        VITE_API_BASE: /api
+        # Frontend so sánh chuỗi "true", không dùng được AUTH_MODE
+        # (Oidc/Dev) nên docker-compose ánh xạ từ biến OIDC_UI_ENABLED.
+        VITE_OIDC_ENABLED: ${OIDC_UI_ENABLED:-true}
+        VITE_OIDC_AUTHORITY: http://localhost:${KEYCLOAK_PORT:-8080}/realms/medequip
+        VITE_OIDC_CLIENT_ID: medequip-ui
+        VITE_OIDC_SCOPE: 'openid profile email'
+        VITE_OIDC_REDIRECT_URI: http://localhost:${WEB_PORT:-3000}/auth/callback
+        VITE_OIDC_POST_LOGOUT_REDIRECT_URI: http://localhost:${WEB_PORT:-3000}/login
+    container_name: medequip-web
+    restart: unless-stopped
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - '${WEB_PORT:-3000}:80'
+    healthcheck:
+      # Dùng 127.0.0.1 chứ không phải localhost: wget sẽ thử ::1 trước mà
+      # nginx chỉ nghe trên IPv4, nên localhost bị "Connection refused".
+      test: ['CMD-SHELL', 'wget -qO- http://127.0.0.1/healthz || exit 1']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres-data:
+  uploads-data:

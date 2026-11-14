@@ -1,0 +1,147 @@
+{
+  "realm": "medequip",
+  "enabled": true,
+  "displayName": "MED-EQUIP — Quản lý thiết bị y tế",
+  "loginTheme": "keycloak",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "accessTokenLifespan": 1800,
+  "ssoSessionIdleTimeout": 36000,
+  "ssoSessionMaxLifespan": 36000,
+  "internationalizationEnabled": true,
+  "supportedLocales": ["vi", "en"],
+  "defaultLocale": "vi",
+
+  "defaultDefaultClientScopes": [
+    "role_list",
+    "profile",
+    "email",
+    "roles",
+    "web-origins",
+    "acr"
+  ],
+
+  "roles": {
+    "realm": [
+      {
+        "name": "MED-EQUIP_ADMIN",
+        "description": "Quản trị hệ thống MED-EQUIP"
+      },
+      {
+        "name": "MED-EQUIP_DIEU_PHOI",
+        "description": "Điều phối viên — tạo, phân công và nghiệm thu phiếu công tác"
+      },
+      {
+        "name": "MED-EQUIP_KY_THUAT_VIEN",
+        "description": "Kỹ thuật viên — thực hiện phiếu công tác được giao"
+      },
+      {
+        "name": "MED-EQUIP_DAU_MOI_KHOA",
+        "description": "Đầu mối khoa — theo dõi thiết bị và phiếu của khoa mình"
+      }
+    ]
+  },
+
+  "clients": [
+    {
+      "clientId": "medequip-ui",
+      "name": "MED-EQUIP giao diện web",
+      "description": "Public client cho React SPA, dùng Authorization Code + PKCE",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "rootUrl": "http://localhost:3000",
+      "baseUrl": "/",
+      "redirectUris": ["http://localhost:3000/*", "http://localhost:5173/*", "http://localhost:8443/*"],
+      "webOrigins": ["http://localhost:3000", "http://localhost:5173", "http://localhost:8443"],
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "http://localhost:3000/*##http://localhost:5173/*##http://localhost:8443/*",
+        "access.token.lifespan": "1800"
+      },
+      "defaultClientScopes": ["openid", "profile", "email", "roles"],
+      "protocolMappers": [
+        {
+          "name": "audience medequip-api",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "medequip-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "medequip-api",
+      "name": "MED-EQUIP API",
+      "description": "Confidential client — API xác thực access token do realm này cấp",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "bearerOnly": false,
+      "secret": "medequip-api-secret",
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "attributes": {
+        "access.token.lifespan": "1800"
+      },
+      "defaultClientScopes": ["openid", "profile", "email", "roles"]
+    }
+  ],
+
+  "users": [
+    {
+      "username": "dphuong",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Diễm Phương",
+      "lastName": "Phạm Thị",
+      "email": "dphuong@bvdk.vn",
+      "credentials": [{ "type": "password", "value": "123456", "temporary": false }],
+      "realmRoles": ["MED-EQUIP_DIEU_PHOI"]
+    },
+    {
+      "username": "minhvt",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Minh Vĩnh Thịnh",
+      "lastName": "Nguyễn",
+      "email": "minhvt@bvdk.vn",
+      "credentials": [{ "type": "password", "value": "123456", "temporary": false }],
+      "realmRoles": ["MED-EQUIP_KY_THUAT_VIEN"]
+    },
+    {
+      "username": "longhduc",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Đức Long",
+      "lastName": "Hoàng",
+      "email": "longhduc@bvdk.vn",
+      "credentials": [{ "type": "password", "value": "123456", "temporary": false }],
+      "realmRoles": ["MED-EQUIP_ADMIN"]
+    },
+    {
+      "username": "vanna",
+      "enabled": true,
+      "emailVerified": true,
+      "firstName": "Thị Ánh Vân",
+      "lastName": "Nguyễn",
+      "email": "vanna@bvdk.vn",
+      "credentials": [{ "type": "password", "value": "123456", "temporary": false }],
+      "realmRoles": ["MED-EQUIP_DAU_MOI_KHOA"]
+    }
+  ]
+}

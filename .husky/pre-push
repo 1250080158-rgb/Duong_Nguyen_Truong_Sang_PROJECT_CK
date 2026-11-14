@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+# =====================================================================
+# Hook pre-push của MED-EQUIP.
+#
+# Chặn đẩy nhánh lên khi mã không build được, bổ sung cho pre-commit
+# (pre-commit có thể bị bỏ qua bằng --no-verify, còn pre-push thì ít khi).
+# Ở đây chỉ chạy build, không chạy test vì lần push thường đã chạy ở commit.
+# =====================================================================
+
+echo "▸ Build backend trước khi đẩy…"
+dotnet build backend/MedEquip.slnx --nologo -v q || {
+  echo "✗ Build backend thất bại — không cho đẩy."
+  exit 1
+}
+
+echo "▸ Build giao diện trước khi đẩy…"
+npm run build || {
+  echo "✗ Build giao diện thất bại — không cho đẩy."
+  exit 1
+}
+
+echo "✓ Sẵn sàng đẩy."

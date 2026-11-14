@@ -1,0 +1,42 @@
+#!/usr/bin/env sh
+# =====================================================================
+# Hook pre-commit của MED-EQUIP.
+#
+# Chạy trước mỗi lần commit:
+#   1. lint-staged — định dạng lại đúng những file vừa thay đổi
+#   2. kiểm tra kiểu (TypeScript + C#) trên toàn bộ mã nguồn
+#   3. chạy test (Vitest + xUnit)
+#
+# Có thể bỏ qua tạm thời bằng:  git commit --no-verify
+# =====================================================================
+
+echo "▸ Định dạng file vừa thay đổi (lint-staged)…"
+npx --no-install lint-staged || exit 1
+
+echo ""
+echo "▸ Kiểm tra kiểu TypeScript…"
+npx --no-install tsc --noEmit || {
+  echo "✗ Lỗi kiểu TypeScript — sửa rồi commit lại."
+  exit 1
+}
+
+echo "▸ Build backend (kiểm tra kiểu C#)…"
+dotnet build backend/MedEquip.slnx --nologo -v q || {
+  echo "✗ Build backend thất bại — sửa rồi commit lại."
+  exit 1
+}
+
+echo "▸ Chạy test giao diện (Vitest)…"
+npx --no-install vitest run --silent || {
+  echo "✗ Test giao diện thất bại."
+  exit 1
+}
+
+echo "▸ Chạy test backend (xUnit)…"
+dotnet test backend/MedEquip.slnx --nologo -v q || {
+  echo "✗ Test backend thất bại."
+  exit 1
+}
+
+echo ""
+echo "✓ Tất cả kiểm tra đã qua."

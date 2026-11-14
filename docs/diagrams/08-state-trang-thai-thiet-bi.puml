@@ -1,0 +1,53 @@
+@startuml 08-State-TrangThaiThietBi
+!pragma layout smetana
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam state {
+  BackgroundColor #F8FAFC
+  BorderColor #475569
+  FontSize 12
+}
+skinparam note {
+  BackgroundColor #FEF3C7
+  BorderColor #D97706
+  FontColor #92400E
+  FontSize 10
+}
+
+title
+  <b>STATE — TRẠNG THÁI THIẾT BỊ</b>
+end title
+
+[*] --> HOAT_DONG : Nhập thiết bị
+
+HOAT_DONG --> SAP_HAN : Hạn HC sắp hết
+HOAT_DONG --> DANG_SUA : Tạo phiếu SC/PM
+HOAT_DONG --> CHO_HIEU_CHUAN : Hạn HC hết\n(BR-01: tự động khóa)
+HOAT_DONG --> THANH_LY : Thanh lý
+
+SAP_HAN --> HOAT_DONG : Cập nhật HC mới
+SAP_HAN --> DANG_SUA : Tạo phiếu
+SAP_HAN --> CHO_HIEU_CHUAN : Hạn HC hết
+SAP_HAN --> THANH_LY : Thanh lý
+
+CHO_HIEU_CHUAN --> HOAT_DONG : Nghiệm thu HC ĐẠT\n(mở khóa)
+CHO_HIEU_CHUAN --> DANG_SUA : Cần sửa trước HC
+CHO_HIEU_CHUAN --> THANH_LY : Thanh lý
+
+DANG_SUA --> HOAT_DONG : Hoàn thành +\nnghiệm thu ĐẠT
+DANG_SUA --> CHO_HIEU_CHUAN : Sau sửa\nnếu quá hạn HC
+DANG_SUA --> THANH_LY : Thanh lý
+
+note right of HOAT_DONG
+  <b>Vận hành bình thường</b>\nTạo được phiếu PM/SC
+end note
+
+note top of CHO_HIEU_CHUAN
+  <b>Bị khóa</b>\nKhông tạo được PM/SC\nChỉ tạo HC/KT (BR-01)
+end note
+
+note right of DANG_SUA
+  <b>Vẫn bị khóa</b>\nTới khi nghiệm thu ĐẠT
+end note
+
+@enduml

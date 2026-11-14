@@ -1,0 +1,90 @@
+@startuml 01-UseCase-TongQuat
+!pragma layout smetana
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #F8FAFC
+  BorderColor #475569
+  FontSize 12
+  ArrowColor #475569
+}
+skinparam actor {
+  BackgroundColor #DBEAFE
+  BorderColor #1E40AF
+  FontColor #1E3A8A
+  FontSize 13
+  FontStyle bold
+}
+skinparam packageStyle rectangle
+skinparam rectangle {
+  BackgroundColor #F1F5F9
+  BorderColor #64748B
+  FontStyle bold
+}
+
+title
+  <b>SƠ ĐỒ USE CASE TỔNG QUÁT — HỆ THỐNG QUẢN LÝ THIẾT BỊ Y TẾ</b>
+end title
+
+'--------------------------------------------------
+' TÁC NHÂN
+'--------------------------------------------------
+actor "Đầu mối khoa" as KHOA
+actor "Kỹ thuật viên" as KTV
+actor "Điều phối" as DP
+actor "Quản trị" as ADMIN
+
+'--------------------------------------------------
+' CHỨC NĂNG
+'--------------------------------------------------
+rectangle "Quản lý thiết bị" {
+  usecase "Xem danh sách thiết bị" as UC_XEMTB
+  usecase "Xem chi tiết thiết bị" as UC_CHITIET
+  usecase "Báo hỏng thiết bị" as UC_BAOHONG
+}
+
+rectangle "Phiếu công tác" {
+  usecase "Tạo phiếu công tác" as UC_TAOPHIEU
+  usecase "Phân công kỹ thuật viên" as UC_PHANCONG
+  usecase "Thực hiện phiếu" as UC_THUCHIEN
+  usecase "Nghiệm thu phiếu" as UC_NGHIEMTHU
+}
+
+rectangle "Quản trị hệ thống" {
+  usecase "Quản lý danh mục" as UC_DANHMUC
+  usecase "Quản lý người dùng" as UC_NGUOIDUNG
+  usecase "Xem báo cáo" as UC_BAOCAO
+}
+
+'--------------------------------------------------
+' TÁC NHÂN — CHỨC NĂNG
+'--------------------------------------------------
+KHOA --> UC_XEMTB
+KHOA --> UC_CHITIET
+KHOA --> UC_BAOHONG
+
+KTV --> UC_THUCHIEN
+
+DP --> UC_TAOPHIEU
+DP --> UC_PHANCONG
+DP --> UC_NGHIEMTHU
+DP --> UC_XEMTB
+DP --> UC_BAOCAO
+
+ADMIN --> UC_DANHMUC
+ADMIN --> UC_NGUOIDUNG
+ADMIN --> UC_BAOCAO
+
+'--------------------------------------------------
+' QUAN HỆ
+'--------------------------------------------------
+UC_THUCHIEN ..> UC_TAOPHIEU : <<include>>
+UC_NGHIEMTHU ..> UC_THUCHIEN : <<include>>
+
+note bottom of UC_PHANCONG
+  <b>Điểm nhấn:</b>
+  Chặn phân công phiếu cho thiết bị
+  quá hạn hiệu chuẩn (BR-01)
+end note
+
+@enduml

@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/MedEquip.Api/MedEquip.Api.csproj" />
+    <Project Path="src/MedEquip.Domain/MedEquip.Domain.csproj" />
+    <Project Path="src/MedEquip.Infrastructure/MedEquip.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/MedEquip.Tests/MedEquip.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,96 @@
+@startuml 06-Class-Responsibility
+!pragma layout smetana
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam LeftToRightDisplayDirection right
+skinparam package {
+  BackgroundColor #F1F5F9
+  BorderColor #94A3B8
+  FontSize 10
+  FontColor #0F172A
+  FontStyle bold
+}
+skinparam class {
+  BackgroundColor #F8FAFC
+  BorderColor #475569
+  FontSize 9
+}
+skinparam title {
+  FontSize 12
+  FontColor #0F172A
+  FontStyle bold
+  Alignment center
+}
+skinparam note {
+  BackgroundColor #FEF3C7
+  BorderColor #D97706
+  FontColor #92400E
+  FontSize 8
+}
+
+title
+  <b>CLASS — PHÂN BỔ TRÁCH NHIỆM</b>
+end title
+
+package "Domain" {
+  class CalibrationRules {
+    +CanAssign(status, type) : bool
+    +WithinTolerance(std, measured, tol) : bool
+  }
+  class EvidenceRules {
+    +ValidateFile(file, cfg) : bool
+  }
+  class WorkOrder {
+    +Id, Ma, Loai, TrangThai
+    +CanAccept, CanReturn
+  }
+  class AuditLog {
+    +ComputeHash(...) : string
+  }
+}
+
+package "Infra" {
+  class WorkOrderService {
+    +CompleteAsync(id)
+    +AcceptAsync(id)
+    +ReturnAsync(id, reason)
+  }
+  class AuditService {
+    +LogAsync(...)
+  }
+}
+
+package "API" {
+  class WOController {
+    +GET /api/work-orders
+    +POST /{code}/complete
+    +POST /{code}/review/accept
+  }
+  class DeviceController {
+    +GET /api/equipment
+    +POST /api/incidents/report
+  }
+}
+
+CalibrationRules -- WorkOrder : dùng bởi
+WorkOrder --> AuditLog : ghi log
+WorkOrderService ..> CalibrationRules : BR-03
+WorkOrderService --> WorkOrder : quản lý
+AuditService --> AuditLog : ghi băm
+WOController --> WorkOrderService : biz logic
+DeviceController --> AuditService : báo sự cố
+
+note right of CalibrationRules
+  BR-03: CanAssign &\nWithinTolerance
+end note
+
+note right of WorkOrderService
+  BR-02: mở khóa\nchỉ khi NG = ĐẠT
+end note
+
+note bottom of WOController
+  BR-01: chặn tạo phiếu\nkhi TB quá hạn HC
+end note
+
+@enduml

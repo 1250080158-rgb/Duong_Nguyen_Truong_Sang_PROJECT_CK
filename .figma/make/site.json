@@ -1,0 +1,11 @@
+{
+  "title": "Hệ Thống Bảo Trì Thiết Bị Y Tế",
+  "description": "Streamline medical device management and maintenance with an intuitive interface for users and admins, enhancing efficiency and compliance.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

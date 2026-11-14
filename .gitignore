@@ -1,0 +1,35 @@
+node_modules/
+dist/
+build/
+coverage/
+.cache/
+.env
+.env.local
+.env.*.local
+# Giữ lại các file mẫu để người khác sao chép được
+!.env.example
+!.env.example.docker
+.vite/
+vite.config.*.timestamp-*
+*.tsbuildinfo
+*-debug.log*
+logs/
+*.log
+.claude-replay.*
+.tmp-*
+/.figma/design-context/
+
+# ---- .NET ----
+backend/**/bin/
+backend/**/obj/
+backend/**/TestResults/
+
+# ---- Bằng chứng tải lên khi chạy thử ----
+backend/src/MedEquip.Api/uploads/
+
+# Platform-managed agentplat state, not project source. In the
+# client-initiated single-repo workspace layout (make's `Path: "."` spec) the
+# repo root IS the workspace root, so these land inside this repo rather than
+# beside it.
+/.plugins/
+/.opencode-skills/

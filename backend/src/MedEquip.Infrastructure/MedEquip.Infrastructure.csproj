@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MedEquip.Domain\MedEquip.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Cho phép project kiểm thử gọi trực tiếp hàm băm chuỗi kiểm toán
+         (internal static) để đối chiếu với giá trị PostgreSQL lưu xuống. -->
+    <InternalsVisibleTo Include="MedEquip.Tests" />
+  </ItemGroup>
+</Project>
