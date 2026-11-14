@@ -249,9 +249,7 @@ export default function Layout() {
                 </div>
                 <div className="max-h-96 overflow-y-auto">
                   {notifs.length === 0 && (
-                    <div className="px-4 py-6 text-center text-xs text-slate-400">
-                      Chưa có thông báo nào.
-                    </div>
+                    <div className="px-4 py-6 text-center text-xs text-slate-400">Chưa có thông báo nào.</div>
                   )}
                   {notifs.map((n) => (
                     <div

@@ -48,9 +48,7 @@ export default function MyWork() {
 
   const filtered = filter === 'ALL' ? myOrders : myOrders.filter((o) => o.type === filter);
   // So sánh hai phía — comparator cũ chỉ nhìn a nên thứ tự KHAN không ổn định.
-  const sorted = [...filtered].sort(
-    (a, b) => (a.priority === 'KHAN' ? 0 : 1) - (b.priority === 'KHAN' ? 0 : 1),
-  );
+  const sorted = [...filtered].sort((a, b) => (a.priority === 'KHAN' ? 0 : 1) - (b.priority === 'KHAN' ? 0 : 1));
 
   return (
     <div className="p-4 space-y-4 max-w-lg mx-auto">

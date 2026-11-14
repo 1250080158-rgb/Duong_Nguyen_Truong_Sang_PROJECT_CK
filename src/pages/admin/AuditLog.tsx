@@ -56,9 +56,7 @@ export default function AuditLog() {
   const [actionFilter, setActionFilter] = useState('ALL');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
-  const [allActions, setAllActions] = useState<string[]>(() =>
-    Array.from(new Set(MOCK_MAPPED.map((l) => l.action))),
-  );
+  const [allActions, setAllActions] = useState<string[]>(() => Array.from(new Set(MOCK_MAPPED.map((l) => l.action))));
 
   // Bộ lọc chạy Ở MÁY CHỦ (GET /api/audit?actor=&action=&from=&to=) — trước đây
   // giao diện lọc client-side nên tải toàn bộ nhật ký về rồi mới lọc, với

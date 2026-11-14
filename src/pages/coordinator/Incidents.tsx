@@ -75,10 +75,10 @@ export default function Incidents() {
     setBusyId(id);
     setError(null);
     try {
-      const res = await api<{ code?: string; orderId?: number; incidentCode?: string }>(
-        `/incidents/${id}/${path}`,
-        { method: 'POST', body: body ? JSON.stringify(body) : undefined },
-      );
+      const res = await api<{ code?: string; orderId?: number; incidentCode?: string }>(`/incidents/${id}/${path}`, {
+        method: 'POST',
+        body: body ? JSON.stringify(body) : undefined,
+      });
       if (path === 'ack') {
         setNotice(`Đã tiếp nhận sự cố ${res.code}. Hãy tạo phiếu sửa chữa khi đã điều tra xong.`);
       } else {
@@ -138,7 +138,9 @@ export default function Incidents() {
             key={key}
             onClick={() => setFilter(key)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              filter === key ? 'bg-slate-800 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+              filter === key
+                ? 'bg-slate-800 text-white'
+                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
             }`}
           >
             {label} ({counts[key]})

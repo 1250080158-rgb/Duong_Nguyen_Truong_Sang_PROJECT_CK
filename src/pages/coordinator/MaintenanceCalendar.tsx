@@ -109,7 +109,14 @@ const SCHEDULE: Record<string, Record<string, { id: string; type: string; device
   },
 };
 
-const UNASSIGNED: { id: string; type: string; device: string; department: string; deadline: string; locked?: boolean }[] = [
+const UNASSIGNED: {
+  id: string;
+  type: string;
+  device: string;
+  department: string;
+  deadline: string;
+  locked?: boolean;
+}[] = [
   { id: '#PM-2026-0199', type: 'PM', device: 'ECG-2150', department: 'Tim mạch', deadline: '05/10' },
   {
     id: '#SC-2026-0088',
@@ -323,7 +330,9 @@ export default function MaintenanceCalendar() {
       })
         .then((res) => setNotice(`Đã tạo phiếu hiệu chuẩn ${res.code} trên máy chủ`))
         .catch((err) =>
-          setServerError(err instanceof ApiError ? `${err.code}: ${err.message}` : 'Không tạo được phiếu trên máy chủ.'),
+          setServerError(
+            err instanceof ApiError ? `${err.code}: ${err.message}` : 'Không tạo được phiếu trên máy chủ.',
+          ),
         );
     } else {
       const seq = loadCreatedHC().length + 1;
@@ -520,8 +529,7 @@ export default function MaintenanceCalendar() {
                 {blocked.details ? (
                   <>
                     <div className="text-sm text-red-700">
-                      Thiết bị đã{' '}
-                      <strong>quá hạn hiệu chuẩn {blocked.details.overdueDays ?? '?'} ngày</strong>
+                      Thiết bị đã <strong>quá hạn hiệu chuẩn {blocked.details.overdueDays ?? '?'} ngày</strong>
                       {blocked.details.calibrationValidUntil
                         ? `. Chứng chỉ hiệu chuẩn hết hạn ngày ${fmtDate(blocked.details.calibrationValidUntil)}`
                         : ''}

@@ -82,7 +82,10 @@ export default function TechnicianCalendar() {
       Array.from({ length: 7 }, (_, i) => {
         const d = new Date(weekStart);
         d.setDate(d.getDate() + i);
-        return { iso: isoDate(d), label: `${WEEKDAY_NAMES[i]} ${`${d.getDate()}`.padStart(2, '0')}/${`${d.getMonth() + 1}`.padStart(2, '0')}` };
+        return {
+          iso: isoDate(d),
+          label: `${WEEKDAY_NAMES[i]} ${`${d.getDate()}`.padStart(2, '0')}/${`${d.getMonth() + 1}`.padStart(2, '0')}`,
+        };
       }),
     [weekStart],
   );
@@ -141,9 +144,7 @@ export default function TechnicianCalendar() {
         </div>
 
         {total === 0 ? (
-          <div className="text-center text-sm text-slate-400 py-6">
-            Tuần này không có phiếu nào được xếp lịch.
-          </div>
+          <div className="text-center text-sm text-slate-400 py-6">Tuần này không có phiếu nào được xếp lịch.</div>
         ) : (
           <div className="grid grid-cols-7 gap-2">
             {days.map((d) => {
@@ -173,9 +174,7 @@ export default function TechnicianCalendar() {
 
       {unscheduled.length > 0 && (
         <div className="bg-white border border-slate-200 rounded-2xl p-4">
-          <h2 className="text-sm font-semibold text-slate-700 mb-2">
-            Phiếu của tôi chưa có ngày dự kiến
-          </h2>
+          <h2 className="text-sm font-semibold text-slate-700 mb-2">Phiếu của tôi chưa có ngày dự kiến</h2>
           <div className="space-y-2">
             {unscheduled.map((w) => (
               <button
@@ -185,7 +184,9 @@ export default function TechnicianCalendar() {
               >
                 <span className="text-xs font-mono font-bold text-slate-700">{w.id}</span>
                 <span className="text-xs text-slate-500">{w.device}</span>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${TYPE_STYLE[w.type] ?? 'bg-slate-100 text-slate-600'}`}>
+                <span
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold ${TYPE_STYLE[w.type] ?? 'bg-slate-100 text-slate-600'}`}
+                >
                   {WORK_ORDER_TYPE_LABELS[w.type] ?? w.type}
                 </span>
               </button>

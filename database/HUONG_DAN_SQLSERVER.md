@@ -3,6 +3,7 @@
 ## 1. SELECT - Truy vấn cơ bản
 
 ### 1.1. Select tất cả
+
 ```sql
 -- Xem tất cả thiết bị
 SELECT * FROM thiet_bi;
@@ -12,6 +13,7 @@ SELECT * FROM nguoi_dung;
 ```
 
 ### 1.2. Select với điều kiện WHERE
+
 ```sql
 -- Xem thiết bị theo trạng thái
 SELECT ma, ten, trang_thai
@@ -30,6 +32,7 @@ WHERE vai_tro = 'KY_THUAT_VIEN';
 ```
 
 ### 1.3. Select với điều kiện AND/OR
+
 ```sql
 -- Thiết bị hoạt động VÀ thuộc khoa 1
 SELECT ma, ten
@@ -49,6 +52,7 @@ WHERE (trang_thai = 'HOAT_DONG' OR trang_thai = 'SAP_HAN')
 ```
 
 ### 1.4. Select với IN, NOT IN
+
 ```sql
 -- Thiết bị thuộc các trạng thái cụ thể
 SELECT ma, ten, trang_thai
@@ -62,6 +66,7 @@ WHERE vai_tro NOT IN ('ADMIN');
 ```
 
 ### 1.5. Select với LIKE (tìm kiếm)
+
 ```sql
 -- Tìm thiết bị có tên chứa "sinh phẩm"
 SELECT ma, ten
@@ -80,6 +85,7 @@ WHERE ma LIKE 'DEV-0%';
 ```
 
 ### 1.6. Select với ORDER BY (sắp xếp)
+
 ```sql
 -- Sắp xếp theo ngày nhập (mới nhất trước)
 SELECT ma, ten, ngay_nhap
@@ -105,6 +111,7 @@ ORDER BY
 ```
 
 ### 1.7. Select với LIMIT (TOP trong SQL Server)
+
 ```sql
 -- Chỉ lấy 10 thiết bị đầu tiên
 SELECT TOP 10 ma, ten, trang_thai
@@ -121,6 +128,7 @@ ORDER BY ngay_nhap DESC;
 ## 2. INSERT - Thêm dữ liệu
 
 ### 2.1. Insert cơ bản
+
 ```sql
 -- Thêm khoa phòng mới
 INSERT INTO khoa_phong (ten, la_lam_sang, dia_chi, dien_thoai)
@@ -132,6 +140,7 @@ VALUES (N'Công ty ABC', N'Nguyễn Văn B', '0909 123 456', 'HD-ABC-2024');
 ```
 
 ### 2.2. Insert với giá trị NULL
+
 ```sql
 -- Thêm thiết bị mới (nhiều trường NULL)
 INSERT INTO thiet_bi (ma, ten, id_model, serial, id_khoa, vi_tri, trang_thai,
@@ -141,6 +150,7 @@ VALUES ('DEV-100', N'Máy X', 1, 'SN-001', 1, N'Phòng A', 'HOAT_DONG',
 ```
 
 ### 2.3. Insert với biến DECLARE
+
 ```sql
 -- Tạo biến
 DECLARE @id_khoa INT;
@@ -156,6 +166,7 @@ VALUES ('DEV-101', N'Máy sinh phẩm mới', @id_model, 'SN-002', @id_khoa, 'HO
 ```
 
 ### 2.4. Insert nhiều dòng cùng lúc
+
 ```sql
 -- Thêm nhiều thiết bị
 INSERT INTO khoa_phong (ten, la_lam_sang, dia_chi, dien_thoai)
@@ -170,6 +181,7 @@ VALUES
 ## 3. UPDATE - Cập nhật dữ liệu
 
 ### 3.1. Update cơ bản
+
 ```sql
 -- Cập nhật trạng thái thiết bị
 UPDATE thiet_bi
@@ -184,6 +196,7 @@ WHERE ten_dang_nhap = 'minhvt';
 ```
 
 ### 3.2. Update với điều kiện phức tạp
+
 ```sql
 -- Khóa tất cả thiết bị quá hạn
 UPDATE thiet_bi
@@ -201,6 +214,7 @@ WHERE ma = 'DEV-002';
 ```
 
 ### 3.3. Update với JOIN
+
 ```sql
 -- Cập nhật ngày bảo trì kế tiếp cho tất cả thiết bị
 UPDATE thiet_bi
@@ -211,6 +225,7 @@ WHERE e.pm_ke_tiep IS NULL OR e.pm_ke_tiep < CAST(GETDATE() AS DATE);
 ```
 
 ### 3.4. Update với CASE WHEN
+
 ```sql
 -- Cập nhật trạng thái dựa trên điều kiện
 UPDATE thiet_bi
@@ -227,6 +242,7 @@ SET trang_thai =
 ## 4. DELETE - Xóa dữ liệu
 
 ### 4.1. Delete cơ bản
+
 ```sql
 -- Xóa thông báo đã đọc
 DELETE FROM thong_bao
@@ -238,6 +254,7 @@ WHERE trang_thai = 'DONG';
 ```
 
 ### 4.2. Delete với điều kiện
+
 ```sql
 -- Xóa người dùng không hoạt động
 DELETE FROM nguoi_dung
@@ -249,6 +266,7 @@ WHERE trang_thai = 'THANH_LY';
 ```
 
 ### 4.3. Delete với JOIN
+
 ```sql
 -- Xóa bằng chứng của phiếu đã xóa
 DELETE bang_chung
@@ -264,6 +282,7 @@ WHERE wo.trang_thai = 'TRA_LAI' AND wo.ly_do_tra IS NOT NULL;
 ## 5. JOIN - Nối bảng
 
 ### 5.1. INNER JOIN (chỉ lấy dòng khớp)
+
 ```sql
 -- Lấy thiết bị kèm thông tin model và hãng
 SELECT e.ma, e.ten, m.ten AS model, h.ten AS hang_san_xuat
@@ -278,6 +297,7 @@ INNER JOIN nguoi_dung u ON wo.id_nguoi_thuc_hien = u.id_nguoi_dung;
 ```
 
 ### 5.2. LEFT JOIN (lấy tất cả từ bảng trái, NULL nếu không khớp)
+
 ```sql
 -- Lấy tất cả thiết bị, kể cả chưa có nhà cung cấp bảo trì
 SELECT e.ma, e.ten, n.ten AS nha_cung_cap
@@ -291,6 +311,7 @@ LEFT JOIN nguoi_dung u ON wo.id_nguoi_thuc_hien = u.id_nguoi_dung;
 ```
 
 ### 5.3. RIGHT JOIN (lấy tất cả từ bảng phải)
+
 ```sql
 -- Lấy tất cả kỹ thuật viên, kể cả chưa có phiếu
 SELECT u.ho_ten, COUNT(wo.id_phieu) AS so_phieu
@@ -301,6 +322,7 @@ GROUP BY u.ho_ten;
 ```
 
 ### 5.4. SELF JOIN (nối bảng với chính nó)
+
 ```sql
 -- Tìm thiết bị cùng model
 SELECT e1.ma, e1.ten, e2.ma AS cung_model, e2.ten
@@ -314,6 +336,7 @@ WHERE e1.ma = 'DEV-001';
 ## 6. AGGREGATE FUNCTIONS - Hàm tổng hợp
 
 ### 6.1. COUNT - Đếm
+
 ```sql
 -- Đếm tổng số thiết bị
 SELECT COUNT(*) AS tong_thiet_bi FROM thiet_bi;
@@ -331,6 +354,7 @@ GROUP BY k.ten;
 ```
 
 ### 6.2. SUM - Tổng
+
 ```sql
 -- Tổng giá trị thiết bị
 SELECT SUM(gia_mua) AS tong_gia_tri
@@ -345,6 +369,7 @@ GROUP BY k.ten;
 ```
 
 ### 6.3. AVG - Trung bình
+
 ```sql
 -- Giá trung bình thiết bị
 SELECT AVG(gia_mua) AS gia_trung_binh
@@ -358,6 +383,7 @@ WHERE wo.hoan_thanh_luc IS NOT NULL;
 ```
 
 ### 6.4. MIN, MAX - Giá trị nhỏ nhất, lớn nhất
+
 ```sql
 -- Thiết bị đắt nhất
 SELECT ma, ten, gia_mua
@@ -371,6 +397,7 @@ WHERE gia_mua = (SELECT MIN(gia_mua) FROM thiet_bi WHERE gia_mua IS NOT NULL);
 ```
 
 ### 6.5. GROUP BY với HAVING
+
 ```sql
 -- Đếm phiếu theo loại, chỉ loại có > 10 phiếu
 SELECT loai_phieu, COUNT(*) AS so_luong
@@ -392,6 +419,7 @@ HAVING COUNT(e.id_thiet_bi) > 5;
 ## 7. SUBQUERY - Truy vấn con
 
 ### 7.1. Subquery trong WHERE
+
 ```sql
 -- Thiết bị thuộc khoa có tên "Hóa sinh"
 SELECT ma, ten
@@ -405,6 +433,7 @@ WHERE id_nguoi_thuc_hien = (SELECT id_nguoi_dung FROM nguoi_dung WHERE ten_dang_
 ```
 
 ### 7.2. Subquery trong SELECT
+
 ```sql
 -- Số phiếu của mỗi thiết bị
 SELECT ma, ten,
@@ -418,6 +447,7 @@ FROM thiet_bi e;
 ```
 
 ### 7.3. Subquery trong FROM (Derived Table)
+
 ```sql
 -- Thiết bị có giá trên trung bình
 SELECT ma, ten, gia_mua
@@ -439,6 +469,7 @@ ORDER BY so_thiet_bi DESC;
 ```
 
 ### 7.4. EXISTS, NOT EXISTS
+
 ```sql
 -- Thiết bị có phiếu đang mở
 SELECT ma, ten
@@ -463,6 +494,7 @@ WHERE NOT EXISTS (
 ## 8. WINDOW FUNCTIONS - Hàm cửa sổ
 
 ### 8.1. ROW_NUMBER - Đánh số thứ tự
+
 ```sql
 -- Đánh số thứ tự thiết bị theo ngày nhập
 SELECT ma, ten, ngay_nhap,
@@ -477,6 +509,7 @@ JOIN khoa_phong k ON e.id_khoa = k.id_khoa;
 ```
 
 ### 8.2. RANK, DENSE_RANK - Xếp hạng
+
 ```sql
 -- Xếp hạng thiết bị theo giá (giá bằng nhau cùng rank)
 SELECT ma, ten, gia_mua,
@@ -495,6 +528,7 @@ GROUP BY u.ho_ten;
 ```
 
 ### 8.3. LAG, LEAD - Lấy giá trị dòng trước/sau
+
 ```sql
 -- So sánh giá thiết bị với thiết bị liền trước
 SELECT ma, ten, gia_mua,
@@ -512,6 +546,7 @@ WHERE han_hieu_chuan IS NOT NULL;
 ```
 
 ### 8.4. SUM, AVG với OVER
+
 ```sql
 -- Tổng giá trị thiết bị tích lũy
 SELECT ma, ten, gia_mua,
@@ -531,6 +566,7 @@ WHERE gia_mua IS NOT NULL;
 ## 9. VIEW quan trọng
 
 ### 9.1. v_thiet_bi - View thiết bị đầy đủ
+
 ```sql
 -- Xem thông tin đầy đủ thiết bị
 SELECT * FROM v_thiet_bi;
@@ -545,6 +581,7 @@ WHERE trang_thai_hieu_chuan = 'CHO_HIEU_CHUAN';
 ```
 
 ### 9.2. v_phieu_cong_tac - View phiếu công tác
+
 ```sql
 -- Phiếu quá hạn
 SELECT * FROM v_phieu_cong_tac
@@ -556,12 +593,14 @@ WHERE uu_tien = 'KHAN' AND trang_thai <> 'HOAN_THANH';
 ```
 
 ### 9.3. v_bang_dieu_khien - Dashboard
+
 ```sql
 -- Thống kê tổng quan
 SELECT * FROM v_bang_dieu_khien;
 ```
 
 Kết quả trả về:
+
 - `thiet_bi_hoat_dong`: Số thiết bị hoạt động
 - `thiet_bi_qua_han`: Số thiết bị quá hạn
 - `cho_phan_cong`: Số phiếu chờ phân công
@@ -573,6 +612,7 @@ Kết quả trả về:
 ## 10. CÁC HÀM THỜI GIAN QUAN TRỌNG
 
 ### 10.1. GETDATE, CAST/CONVERT
+
 ```sql
 -- Lấy ngày giờ hiện tại
 SELECT GETDATE() AS now;
@@ -586,6 +626,7 @@ SELECT FORMAT(GETDATE(), 'yyyy-MM-dd') AS ngay_iso;
 ```
 
 ### 10.2. DATEDIFF - Tính khoảng cách ngày
+
 ```sql
 -- Số ngày từ hôm nay đến hạn hiệu chuẩn
 SELECT ma, han_hieu_chuan,
@@ -600,6 +641,7 @@ FROM thiet_bi;
 ```
 
 ### 10.3. DATEADD - Cộng/trừ ngày
+
 ```sql
 -- Ngày bảo trì kế tiếp = hôm nay + 90 ngày
 SELECT ma, ngay_nhap,
@@ -614,6 +656,7 @@ WHERE han_hieu_chuan IS NOT NULL;
 ```
 
 ### 10.4. Hàm fn_so_thang (đã có trong database)
+
 ```sql
 -- Đếm số tháng giữa hai ngày
 SELECT dbo.fn_so_thang('2024-01-01', '2024-10-28') AS so_thang;
@@ -630,6 +673,7 @@ FROM thiet_bi;
 ## 11. TRANSACTION - Giao dịch
 
 ### 11.1. Transaction cơ bản
+
 ```sql
 BEGIN TRANSACTION;
 
@@ -650,6 +694,7 @@ COMMIT TRANSACTION;
 ```
 
 ### 11.2. Transaction với TRY-CATCH
+
 ```sql
 BEGIN TRY
     BEGIN TRANSACTION;
@@ -671,6 +716,7 @@ END CATCH;
 ## 12. STORED PROCEDURE - Thủ tục lưu trữ
 
 ### 12.1. Tạo stored procedure đơn giản
+
 ```sql
 CREATE PROCEDURE sp_TaoPhieuBaoTri
     @ma_thiet_bi NVARCHAR(20),
@@ -691,6 +737,7 @@ GO
 ```
 
 ### 12.2. Gọi stored procedure
+
 ```sql
 EXEC sp_TaoPhieuBaoTri 'DEV-001', '2024-11-28';
 ```
@@ -700,6 +747,7 @@ EXEC sp_TaoPhieuBaoTri 'DEV-001', '2024-11-28';
 ## 13. Mẹo và Best Practices
 
 ### 13.1. Dùng EXISTS thay vì COUNT
+
 ```sql
 -- ❌ Chậm
 IF (SELECT COUNT(*) FROM thiet_bi WHERE trang_thai = 'CHO_HIEU_CHUAN') > 0
@@ -711,12 +759,14 @@ IF EXISTS (SELECT 1 FROM thiet_bi WHERE trang_thai = 'CHO_HIEU_CHUAN')
 ```
 
 ### 13.2. Dùng TOP thay vì LIMIT
+
 ```sql
 -- SQL Server không có LIMIT, dùng TOP
 SELECT TOP 10 * FROM thiet_bi;
 ```
 
 ### 13.3. Luôn dùng N'' cho tiếng Việt
+
 ```sql
 -- ❌ Có thể lỗi font
 INSERT INTO khoa_phong (ten) VALUES ('Hóa sinh');
@@ -726,6 +776,7 @@ INSERT INTO khoa_phong (ten) VALUES (N'Hóa sinh');
 ```
 
 ### 13.4. Index để tăng tốc độ
+
 ```sql
 -- Tạo index trên cột thường dùng WHERE
 CREATE INDEX ix_thiet_bi_trang_thai ON thiet_bi(trang_thai);
@@ -737,6 +788,7 @@ CREATE INDEX ix_phieu_cong_tac_ngay ON phieu_cong_tac(tao_luc);
 ## 14. Ví dụ thực tế hoàn chỉnh
 
 ### 14.1. Quy trình tạo phiếu bảo trì hoàn chỉnh
+
 ```sql
 -- Bước 1: Tạo phiếu
 DECLARE @id_tb INT, @id_khoa INT;
@@ -766,6 +818,7 @@ PRINT 'Đã tạo và phân công phiếu PM-2026-9999';
 ```
 
 ### 14.2. Báo cáo thiết bị cần bảo trì trong tháng
+
 ```sql
 -- Thiết bị cần bảo trì trong 30 ngày tới
 SELECT e.ma, e.ten, k.ten AS khoa, e.pm_ke_tiep,
@@ -778,6 +831,7 @@ ORDER BY e.pm_ke_tiep ASC;
 ```
 
 ### 14.3. Thống kê hiệu suất kỹ thuật viên
+
 ```sql
 -- Hiệu suất kỹ thuật viên (phiếu hoàn thành, đúng hạn, bị trả lại)
 SELECT u.ho_ten,

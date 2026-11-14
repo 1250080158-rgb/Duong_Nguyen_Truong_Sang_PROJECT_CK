@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { workOrders, type WorkOrder } from '../../data/mockData';
-import { api, apiOr, ApiError, fmtDate, PRIORITY_LABELS, WORK_ORDER_STATUS_LABELS, WORK_ORDER_TYPE_LABELS } from '../../api/client';
+import {
+  api,
+  apiOr,
+  ApiError,
+  fmtDate,
+  PRIORITY_LABELS,
+  WORK_ORDER_STATUS_LABELS,
+  WORK_ORDER_TYPE_LABELS,
+} from '../../api/client';
 import { useDevices, parseEquipmentId, type DeviceRow } from '../../api/hooks';
 import type { ApiWorkOrder, ApiUser } from '../../api/types';
 

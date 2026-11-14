@@ -227,9 +227,7 @@ export default function DeviceDetail() {
           {hcMsg && (
             <div
               className={`mt-2 rounded-xl px-3 py-2 text-xs border ${
-                hcMsg.ok
-                  ? 'bg-green-50 border-green-200 text-green-700'
-                  : 'bg-red-50 border-red-200 text-red-700'
+                hcMsg.ok ? 'bg-green-50 border-green-200 text-green-700' : 'bg-red-50 border-red-200 text-red-700'
               }`}
             >
               {hcMsg.text}

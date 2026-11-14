@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import { workOrders, type WorkOrder } from '../../data/mockData';
-import { apiOr, fmtDate, getUser, PRIORITY_LABELS, WORK_ORDER_STATUS_LABELS, WORK_ORDER_TYPE_LABELS } from '../../api/client';
+import {
+  apiOr,
+  fmtDate,
+  getUser,
+  PRIORITY_LABELS,
+  WORK_ORDER_STATUS_LABELS,
+  WORK_ORDER_TYPE_LABELS,
+} from '../../api/client';
 import type { ApiWorkOrder } from '../../api/types';
 
 // Màn "Phiếu của khoa" — đầu mối khoa chỉ thấy phiếu của KHOA MÌNH.
@@ -37,8 +44,9 @@ export default function DepartmentOrders() {
     // Máy chủ cũng tự giới hạn theo khoa cho vai trò đầu mối khoa, nên
     // ngay cả khi tham số bị bỏ trốn thì dữ liệu vẫn đúng phạm vi.
     const path = departmentId ? `/work-orders?departmentId=${departmentId}` : '/work-orders';
-    apiOr<ApiWorkOrder[]>(path, () =>
-      workOrders.filter((o) => o.department === department) as unknown as ApiWorkOrder[],
+    apiOr<ApiWorkOrder[]>(
+      path,
+      () => workOrders.filter((o) => o.department === department) as unknown as ApiWorkOrder[],
     )
       .then((list) =>
         setOrders(
@@ -112,7 +120,9 @@ export default function DepartmentOrders() {
               </span>
             </div>
             <div className="flex items-center gap-2 text-[11px]">
-              <span className={`px-1.5 py-0.5 rounded font-bold ${TYPE_STYLE[o.type]}`}>{WORK_ORDER_TYPE_LABELS[o.type]}</span>
+              <span className={`px-1.5 py-0.5 rounded font-bold ${TYPE_STYLE[o.type]}`}>
+                {WORK_ORDER_TYPE_LABELS[o.type]}
+              </span>
               {o.priority === 'KHAN' && <span className="text-red-600 font-bold">🔴 Khẩn</span>}
               <span className="text-slate-400">Hạn: {o.deadline}</span>
               {o.assignee && o.assignee !== '—' && <span className="text-slate-400">· KTV: {o.assignee}</span>}

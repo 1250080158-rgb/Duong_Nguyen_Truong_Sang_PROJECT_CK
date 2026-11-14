@@ -16,14 +16,7 @@
   "supportedLocales": ["vi", "en"],
   "defaultLocale": "vi",
 
-  "defaultDefaultClientScopes": [
-    "role_list",
-    "profile",
-    "email",
-    "roles",
-    "web-origins",
-    "acr"
-  ],
+  "defaultDefaultClientScopes": ["role_list", "profile", "email", "roles", "web-origins", "acr"],
 
   "roles": {
     "realm": [

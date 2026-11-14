@@ -90,9 +90,7 @@ export default function UserManagement() {
       setMessage({
         type: 'err',
         text:
-          err instanceof ApiError
-            ? `[${err.code}] ${err.message}`
-            : 'Không đồng bộ được — kiểm tra kết nối máy chủ.',
+          err instanceof ApiError ? `[${err.code}] ${err.message}` : 'Không đồng bộ được — kiểm tra kết nối máy chủ.',
       });
     } finally {
       setBusyId(null);
@@ -132,9 +130,7 @@ export default function UserManagement() {
         method: 'PUT',
         body: JSON.stringify({ active }),
       });
-      setAllUsers((prev) =>
-        prev.map((u) => (u.id === user.id ? { ...u, status: active ? 'active' : 'inactive' } : u)),
-      );
+      setAllUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, status: active ? 'active' : 'inactive' } : u)));
       setMessage({
         type: 'ok',
         text: active ? `Đã mở khoá tài khoản ${user.name}.` : `Đã khoá tài khoản ${user.name}.`,
