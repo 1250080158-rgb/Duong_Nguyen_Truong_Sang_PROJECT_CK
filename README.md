@@ -1,5 +1,8 @@
 # MED-EQUIP — Hệ thống quản lý thiết bị y tế và bảo trì
 
+> **Bài tập cuối kì** — Môn: Công nghệ phần mềm (12_ĐH_CNPM2)
+> Sinh viên: **Dương Nguyễn Trường Sang** — MSSV: **1250080158**
+
 Ứng dụng quản lý vòng đời thiết bị y tế: theo dõi hiệu chuẩn, lịch bảo trì
 định kỳ (PM), sửa chữa (SC), phiếu công tác, bằng chứng và nhật ký kiểm toán
 bất biến.
