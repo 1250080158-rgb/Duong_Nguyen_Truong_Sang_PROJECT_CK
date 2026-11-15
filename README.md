@@ -474,9 +474,9 @@ Bỏ qua tạm thời: `git commit --no-verify`.
 
 ## 12. Ghi chú kỹ thuật
 
-**Mọi cột thời gian trong CSDL là `TIMESTAMPTZ`.** Npgsql chỉ nhận `DateTime`
-có `Kind = Utc`. `DataContext.NormalizeDateTimeToUtc()` tự quy đổi trước khi
-`SaveChanges`, nhưng code mới vẫn nên dùng `DateTime.UtcNow`.
+**Cột thời gian trong CSDL là `TIMESTAMP` (không múi giờ).** Code luôn nên
+tạo giá trị thời gian bằng `DateTime.UtcNow`. `DataContext.NormalizeDateTimeToUtc()`
+tự quy đổi giá trị `Kind = Local` về UTC trước khi `SaveChanges`.
 
 **Chuỗi băm nhật ký kiểm toán** phải khớp chính xác hàm `fn_bam_audit` trong
 CSDL: SHA-256 trên byte UTF-8 của `prev|actor|action|target|detail`, trả về

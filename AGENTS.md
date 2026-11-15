@@ -86,9 +86,10 @@ docker compose up -d --build     # chạy trọn hệ thống
 1. **Giao diện không nối thẳng PostgreSQL.** Mọi thao tác đi qua API.
 2. **CSDL chỉ đổi bằng `database/QLTBYT.sql`.** Không dùng EF migration, và
    phải nạp được trên PostgreSQL 18. Script chạy lại được nhiều lần.
-3. **Mọi cột thời gian là `TIMESTAMPTZ`.** Npgsql chỉ nhận `DateTime` có
-   `Kind = Utc` — dùng `DateTime.UtcNow`. `DataContext` đã có lưới an toàn
-   tự quy đổi, nhưng code mới vẫn nên viết đúng từ đầu.
+3. **Cột thời gian trong `QLTBYT.sql` là `TIMESTAMP` (không múi giờ).**
+   Luôn dùng `DateTime.UtcNow` cho giá trị thời gian; `DataContext` có
+   lưới an toàn tự quy đổi `DateTime.Now` (`Kind = Local`) về UTC trước
+   khi ghi, nhưng code mới vẫn nên viết đúng từ đầu.
 4. **Chuỗi băm nhật ký kiểm toán phải khớp `fn_bam_audit` trong CSDL:**
    SHA-256 trên byte UTF-8 của `prev|actor|action|target|detail`, trả hex
    **chữ thường**. Đổi thuật toán thì phải đổi cả hàm SQL.

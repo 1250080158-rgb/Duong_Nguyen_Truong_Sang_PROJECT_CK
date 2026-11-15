@@ -29,11 +29,11 @@ psql -U sa -d qltbyt -v ON_ERROR_STOP=1 -f ../database/QLTBYT.sql
 Script chạy lại được nhiều lần (mục 0 `DROP ... CASCADE`).
 
 Chuỗi kết nối mặc định trong `src/MedEquip.Api/appsettings.json`:
-`Host=localhost;Port=5432;Database=qltbyt;Username=sa;Password=123456`.
+`Host=127.0.0.1;Port=5432;Database=qltbyt;Username=postgres;Password=123456`.
 
-Mọi cột thời gian là `TIMESTAMPTZ` — Npgsql chỉ nhận `DateTime` có `Kind = Utc`.
-`DataContext.NormalizeDateTimeToUtc()` tự quy đổi trước khi `SaveChanges`, nhưng
-code mới vẫn nên dùng `DateTime.UtcNow` cho thẳng.
+Cột thời gian trong CSDL là `TIMESTAMP` (không múi giờ) — code mới vẫn nên
+dùng `DateTime.UtcNow`. `DataContext.NormalizeDateTimeToUtc()` tự quy đổi
+giá trị `Kind = Local` về UTC trước khi `SaveChanges`.
 
 ## 2. Chạy API
 
