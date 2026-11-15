@@ -34,7 +34,9 @@ export default defineConfig(({ mode }) => {
       port: parseInt(process.env.PORT || '8443'),
       strictPort: true,
       watch: {
-        ignored: ['**/.figma/**'],
+        // Loại trừ backend: dotnet build ghi đè file trong bin/, obj/ trong
+        // lúc Vite đang chạy gây EBUSY (apphost.exe bị khóa) làm dev server sập.
+        ignored: ['**/.figma/**', '**/backend/**'],
       },
     },
     preview: {
